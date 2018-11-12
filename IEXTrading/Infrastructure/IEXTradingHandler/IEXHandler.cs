@@ -9,14 +9,14 @@ namespace IEXTrading.Infrastructure.IEXTradingHandler
 {
     public class IEXHandler
     {
-        static string BASE_URL = "https://api.iextrading.com/1.0/"; //This is the base URL, method specific URL is appended to this.
-        HttpClient httpClient;
+        static string url = "https://api.iextrading.com/1.0/"; //This is the base URL, method specific URL is appended to this.
+        HttpClient client;
 
         public IEXHandler()
         {
-            httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Accept.Clear();
-            httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            client = new HttpClient();
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
         }
 
         /****
@@ -24,148 +24,126 @@ namespace IEXTrading.Infrastructure.IEXTradingHandler
         ****/
         public List<Company> GetSymbols()
         {
-            string IEXTrading_API_PATH = BASE_URL + "ref-data/symbols";
-            string companyList = "";
+            string APIPath = url + "ref-data/symbols";
+            string Company_List = "";
 
-            List<Company> companies = null;
+            List<Company> Companies = null;
 
-            httpClient.BaseAddress = new Uri(IEXTrading_API_PATH);
-            HttpResponseMessage response = httpClient.GetAsync(IEXTrading_API_PATH).GetAwaiter().GetResult();
-            if (response.IsSuccessStatusCode)
+            client.BaseAddress = new Uri(APIPath);
+            HttpResponseMessage ResponseMsg = client.GetAsync(APIPath).GetAwaiter().GetResult();
+            if (ResponseMsg.IsSuccessStatusCode)
             {
-                companyList = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                Company_List = ResponseMsg.Content.ReadAsStringAsync().GetAwaiter().GetResult();
             }
 
-            if (!companyList.Equals(""))
+            if (!Company_List.Equals(""))
             {
-                companies = JsonConvert.DeserializeObject<List<Company>>(companyList);
-                //companies = companies.GetRange(0, 9);
+                Companies = JsonConvert.DeserializeObject<List<Company>>(Company_List);
             }
-            return companies;
+            return Companies;
         }
 
 
         public List<Quote> GetQuotes(List<Company> companies)
         {
-            string symbols = "";
+            string Symbols = "";
 
-            List<Quote> quoteList = new List<Quote>();
-            Dictionary<string, Dictionary<string, Quote>> quoteDict = null;
-            int batchStart = 0;
-            int batchEnd = 100;
-            int stepCount = 100;
-            List<Company> batchCompanies = null;
-            List<CompanyStrategyValue> companyStrategyValueList = new List<CompanyStrategyValue>();
-            while (batchEnd <= companies.Count)
+            List<Quote> Quote_List = new List<Quote>();
+            Dictionary<string, Dictionary<string, Quote>> Quote_Dict = null;
+            int Batch_Start = 0;
+            int Batch_End = 100;
+            int Step_Count = 100;
+            List<Company> Batch_Company = null;
+            List<CompanyStrategyValue> Value_List = new List<CompanyStrategyValue>();
+            while (Batch_End <= companies.Count)
             {
-                int count = 0;
-                symbols = "";
-                batchCompanies = new List<Company>();
-                batchCompanies = companies.GetRange(batchStart, stepCount);
-                foreach (var company in batchCompanies)
+                int Count = 0;
+                Symbols = "";
+                Batch_Company = new List<Company>();
+                Batch_Company = companies.GetRange(Batch_Start, Step_Count);
+                foreach (var company in Batch_Company)
                 {
-                    count++;
-                    symbols = symbols + company.symbol + ",";
+                    Count++;
+                    Symbols = Symbols + company.symbol + ",";
                 }
 
 
-                string IEXTrading_API_PATH = BASE_URL + "stock/market/batch?symbols=" + symbols + "&types=quote";
-                string quoteResponse = "";
+                string APIPath = url + "stock/market/batch?symbols=" + Symbols + "&types=quote";
+                string Quote_Resp = "";
 
-                //Dictionary<string, Quote> quotesDict = new Dictionary<string, Quote>();
-                HttpResponseMessage response = httpClient.GetAsync(IEXTrading_API_PATH).GetAwaiter().GetResult();
-                if (response.IsSuccessStatusCode)
+                HttpResponseMessage ResponseMsg = client.GetAsync(APIPath).GetAwaiter().GetResult();
+                if (ResponseMsg.IsSuccessStatusCode)
                 {
-                    quoteResponse = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                    Quote_Resp = ResponseMsg.Content.ReadAsStringAsync().GetAwaiter().GetResult();
                 }
-                quoteDict = new Dictionary<string, Dictionary<string, Quote>>();
-                if (!string.IsNullOrEmpty(quoteResponse))
+                Quote_Dict = new Dictionary<string, Dictionary<string, Quote>>();
+                if (!string.IsNullOrEmpty(Quote_Resp))
                 {
-                    quoteDict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Quote>>>(quoteResponse);
+                    Quote_Dict = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, Quote>>>(Quote_Resp);
                 }
 
-                foreach (var quoteItem in quoteDict)
+                foreach (var Quote_Item in Quote_Dict)
                 {
 
-                    foreach (var quote in quoteItem.Value)
+                    foreach (var Quote in Quote_Item.Value)
                     {
-                        if (quote.Value != null)
+                        if (Quote.Value != null)
                         {
-                            quoteList.Add(quote.Value);
+                            Quote_List.Add(Quote.Value);
                         }
                     }
                 }
 
-
-                batchStart = batchEnd;
-                batchEnd = batchEnd + 100;
-                if (batchEnd > companies.Count)
+                Batch_Start = Batch_End;
+                Batch_End = Batch_End + 100;
+                if (Batch_End > companies.Count)
                 {
-                    stepCount = batchEnd - companies.Count;
+                    Step_Count = Batch_End - companies.Count;
                 }
             }
-            //CompanyStrategyValue companyStrategyValue = null;
-
-            //foreach (var quote in quoteList)
-            //{
-            //    companyStrategyValue = new CompanyStrategyValue();
-            //    companyStrategyValue.symbol = quote.symbol;
-            //    if ((quote.week52High - quote.week52Low) != 0)
-            //    {
-            //        companyStrategyValue.companyValue = ((quote.close - quote.week52Low) / (quote.week52High - quote.week52Low));
-            //    }
-            //    companyStrategyValueList.Add(companyStrategyValue);
-            //}
-
-            //return companyStrategyValueList.OrderByDescending(a => a.companyValue).Take(5).ToList();
-            return quoteList;
+            return Quote_List;
         }
 
         public List<CompanyStrategyValue> GetTop5Picks(List<Company> companies)
         {
-            List<Quote> quoteList = new List<Quote>();
-            CompanyStrategyValue companyStrategyValue = null;
-            quoteList = GetQuotes(companies);
-            List<CompanyStrategyValue> companyStrategyValueList = new List<CompanyStrategyValue>();
-            foreach (var quote in quoteList)
+            List<Quote> Quote_List = new List<Quote>();
+            CompanyStrategyValue CmpStrat_Value = null;
+            Quote_List = GetQuotes(companies);
+            List<CompanyStrategyValue> Value_List = new List<CompanyStrategyValue>();
+            foreach (var Quote in Quote_List)
             {
-                companyStrategyValue = new CompanyStrategyValue();
-                companyStrategyValue.symbol = quote.symbol;
-                if ((quote.week52High - quote.week52Low) != 0)
+                CmpStrat_Value = new CompanyStrategyValue();
+                CmpStrat_Value.symbol = Quote.symbol;
+                if ((Quote.week52High - Quote.week52Low) != 0)
                 {
-                    companyStrategyValue.companyValue = ((quote.close - quote.week52Low) / (quote.week52High - quote.week52Low));
+                    CmpStrat_Value.companyValue = ((Quote.close - Quote.week52Low) / (Quote.week52High - Quote.week52Low));
                 }
-                companyStrategyValueList.Add(companyStrategyValue);
+                Value_List.Add(CmpStrat_Value);
             }
             
-            return companyStrategyValueList.OrderByDescending(a => a.companyValue).Take(5).ToList();
+            return Value_List.OrderByDescending(a => a.companyValue).Take(5).ToList();
         }
 
         /****
-         * Calls the IEX stock API to get 1 year's chart for the supplied symbol. 
+         * Calls the IEX stock API to get one year's chart for the supplied symbol. 
         ****/
-        public List<Equity> GetChart(string symbol)
+        public List<Equity> GetList(string symbol)
         {
-            //Using the format method.
-            //string IEXTrading_API_PATH = BASE_URL + "stock/{0}/batch?types=chart&range=1y";
-            //IEXTrading_API_PATH = string.Format(IEXTrading_API_PATH, symbol);
+            string APIPath = url + "stock/" + symbol + "/batch?types=chart&range=1y";
 
-            string IEXTrading_API_PATH = BASE_URL + "stock/" + symbol + "/batch?types=chart&range=1y";
-
-            string charts = "";
+            string list = "";
             List<Equity> Equities = new List<Equity>();
-            httpClient.BaseAddress = new Uri(IEXTrading_API_PATH);
-            HttpResponseMessage response = httpClient.GetAsync(IEXTrading_API_PATH).GetAwaiter().GetResult();
-            if (response.IsSuccessStatusCode)
+            client.BaseAddress = new Uri(APIPath);
+            HttpResponseMessage ResponseMsg = client.GetAsync(APIPath).GetAwaiter().GetResult();
+            if (ResponseMsg.IsSuccessStatusCode)
             {
-                charts = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+                list = ResponseMsg.Content.ReadAsStringAsync().GetAwaiter().GetResult();
             }
-            if (!charts.Equals(""))
+            if (!list.Equals(""))
             {
-                ChartRoot root = JsonConvert.DeserializeObject<ChartRoot>(charts, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
+                ChartRoot root = JsonConvert.DeserializeObject<ChartRoot>(list, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore });
                 Equities = root.chart.ToList();
             }
-            //make sure to add the symbol the chart
             foreach (Equity Equity in Equities)
             {
                 Equity.symbol = symbol;

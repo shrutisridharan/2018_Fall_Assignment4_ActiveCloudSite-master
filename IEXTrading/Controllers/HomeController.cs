@@ -65,19 +65,19 @@ namespace MVCTemplate.Controllers
          * A ViewModel CompaniesEquities containing the list of companies, prices, volumes, avg price and volume.
          * This ViewModel is passed to the Chart view.
         ****/
-        public IActionResult Chart(string symbol)
+        public IActionResult List(string symbol)
         {
             //Set ViewBag variable first
             ViewBag.dbSuccessChart = 0;
-            List<Equity> equities = new List<Equity>();
+            List<Equity> Equities = new List<Equity>();
             if (symbol != null)
             {
                 IEXHandler webHandler = new IEXHandler();
-                equities = webHandler.GetChart(symbol);
-                equities = equities.OrderBy(c => c.date).ToList(); //Make sure the data is in ascending order of date.
+                Equities = webHandler.GetList(symbol);
+                Equities = Equities.OrderBy(c => c.date).ToList(); //Make sure the data is in ascending order of date.
             }
 
-            CompaniesEquities companiesEquities = getCompaniesEquitiesModel(equities);
+            CompaniesEquities companiesEquities = getCompaniesEquitiesModel(Equities);
 
             return View(companiesEquities);
         }
@@ -116,22 +116,6 @@ namespace MVCTemplate.Controllers
             return View("Symbols", companies);
         }
 
-        public IActionResult PopulateQuotes()
-        {
-            List<Quote> quotes = JsonConvert.DeserializeObject<List<Quote>>(TempData["Quotes"].ToString());
-            foreach (Quote quote in quotes)
-            {
-                //Database will give PK constraint violation error when trying to insert record with existing PK.
-                //So add company only if it doesnt exist, check existence using symbol (PK)
-                if (dbContext.Quotes.Where(c => c.symbol.Equals(quote.symbol)).Count() == 0)
-                {
-                    dbContext.Quotes.Add(quote);
-                }
-            }
-            dbContext.SaveChanges();
-            ViewBag.dbSuccessComp = 1;
-            return View("Quotes", quotes);
-        }
 
         public IActionResult ShowTop5Stock()
         {
@@ -150,7 +134,7 @@ namespace MVCTemplate.Controllers
         public IActionResult SaveCharts(string symbol)
         {
             IEXHandler webHandler = new IEXHandler();
-            List<Equity> equities = webHandler.GetChart(symbol);
+            List<Equity> equities = webHandler.GetList(symbol);
             //List<Equity> equities = JsonConvert.DeserializeObject<List<Equity>>(TempData["Equities"].ToString());
             foreach (Equity equity in equities)
             {
@@ -214,7 +198,8 @@ namespace MVCTemplate.Controllers
             return new CompaniesEquities(companies, equities.Last(), dates, prices, volumes, avgprice, avgvol);
         }
 
-        
+
 
     }
 }
+

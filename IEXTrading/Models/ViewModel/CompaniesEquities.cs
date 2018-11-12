@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace IEXTrading.Models.ViewModel
 {
+    //Name of Companies, current values, dates, prices, volume are being assigned to variables used in strategy
     public class CompaniesEquities
     {
         public List<Company> Companies { get; set; }

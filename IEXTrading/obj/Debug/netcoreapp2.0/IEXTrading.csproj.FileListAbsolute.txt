@@ -42,3 +42,14 @@ C:\Users\Gokul\Documents\shruti folder\USF Subjects\DIS ISM6225\Assignment - IV 
 C:\Users\Gokul\Documents\shruti folder\USF Subjects\DIS ISM6225\Assignment - IV Stock PIcking Strategy\IEXTrading\obj\Debug\netcoreapp2.0\IEXTrading.AssemblyInfo.cs
 C:\Users\Gokul\Documents\shruti folder\USF Subjects\DIS ISM6225\Assignment - IV Stock PIcking Strategy\IEXTrading\obj\Debug\netcoreapp2.0\IEXTrading.dll
 C:\Users\Gokul\Documents\shruti folder\USF Subjects\DIS ISM6225\Assignment - IV Stock PIcking Strategy\IEXTrading\obj\Debug\netcoreapp2.0\IEXTrading.pdb
+C:\Users\Ahaana Sharma\Source\Repos\shrutisridharan\2018_Fall_Assignment4_ActiveCloudSite-master\IEXTrading\bin\Debug\netcoreapp2.0\IEXTrading.deps.json
+C:\Users\Ahaana Sharma\Source\Repos\shrutisridharan\2018_Fall_Assignment4_ActiveCloudSite-master\IEXTrading\bin\Debug\netcoreapp2.0\IEXTrading.runtimeconfig.json
+C:\Users\Ahaana Sharma\Source\Repos\shrutisridharan\2018_Fall_Assignment4_ActiveCloudSite-master\IEXTrading\bin\Debug\netcoreapp2.0\IEXTrading.runtimeconfig.dev.json
+C:\Users\Ahaana Sharma\Source\Repos\shrutisridharan\2018_Fall_Assignment4_ActiveCloudSite-master\IEXTrading\bin\Debug\netcoreapp2.0\IEXTrading.dll
+C:\Users\Ahaana Sharma\Source\Repos\shrutisridharan\2018_Fall_Assignment4_ActiveCloudSite-master\IEXTrading\bin\Debug\netcoreapp2.0\IEXTrading.pdb
+C:\Users\Ahaana Sharma\Source\Repos\shrutisridharan\2018_Fall_Assignment4_ActiveCloudSite-master\IEXTrading\obj\Debug\netcoreapp2.0\IEXTrading.csprojAssemblyReference.cache
+C:\Users\Ahaana Sharma\Source\Repos\shrutisridharan\2018_Fall_Assignment4_ActiveCloudSite-master\IEXTrading\obj\Debug\netcoreapp2.0\IEXTrading.csproj.CoreCompileInputs.cache
+C:\Users\Ahaana Sharma\Source\Repos\shrutisridharan\2018_Fall_Assignment4_ActiveCloudSite-master\IEXTrading\obj\Debug\netcoreapp2.0\IEXTrading.AssemblyInfoInputs.cache
+C:\Users\Ahaana Sharma\Source\Repos\shrutisridharan\2018_Fall_Assignment4_ActiveCloudSite-master\IEXTrading\obj\Debug\netcoreapp2.0\IEXTrading.AssemblyInfo.cs
+C:\Users\Ahaana Sharma\Source\Repos\shrutisridharan\2018_Fall_Assignment4_ActiveCloudSite-master\IEXTrading\obj\Debug\netcoreapp2.0\IEXTrading.dll
+C:\Users\Ahaana Sharma\Source\Repos\shrutisridharan\2018_Fall_Assignment4_ActiveCloudSite-master\IEXTrading\obj\Debug\netcoreapp2.0\IEXTrading.pdb
