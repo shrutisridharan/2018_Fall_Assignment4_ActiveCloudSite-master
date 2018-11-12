@@ -35,13 +35,30 @@ namespace MVCTemplate.Controllers
             //Set ViewBag variable first
             ViewBag.dbSucessComp = 0;
             IEXHandler webHandler = new IEXHandler();
-            List<Company> companies = webHandler.GetSymbols();
+            List<Company> companies = webHandler.GetSymbols().Take(5).ToList();
 
             //Save comapnies in TempData
-            TempData["Companies"] = JsonConvert.SerializeObject(companies);
+            TempData["Companies"] = JsonConvert.SerializeObject(companies.Take(5));
+            //List<CompanyStrategyValue> quotes = webHandler.GetQuotes(companies);
 
             return View(companies);
         }
+
+        public IActionResult Quotes()
+        {
+            //Set ViewBag variable first
+            ViewBag.dbSucessComp = 0;
+            IEXHandler webHandler = new IEXHandler();
+            List<Quote> quotes = webHandler.GetQuotes(webHandler.GetSymbols()).Take(5).ToList();
+
+            //Save comapnies in TempData
+            TempData["Quotes"] = JsonConvert.SerializeObject(quotes.Take(5));
+            //List<CompanyStrategyValue> quotes = webHandler.GetQuotes(companies);
+
+            return View(quotes);
+        }
+
+
 
         /****
          * The Chart action calls the GetChart method that returns 1 year's equities for the passed symbol.
@@ -75,6 +92,7 @@ namespace MVCTemplate.Controllers
             Dictionary<string, int> tableCount = new Dictionary<string, int>();
             tableCount.Add("Companies", dbContext.Companies.Count());
             tableCount.Add("Charts", dbContext.Equities.Count());
+            tableCount.Add("Quotes", dbContext.Equities.Count());
             return View(tableCount);
         }
 
@@ -96,6 +114,34 @@ namespace MVCTemplate.Controllers
             dbContext.SaveChanges();
             ViewBag.dbSuccessComp = 1;
             return View("Symbols", companies);
+        }
+
+        public IActionResult PopulateQuotes()
+        {
+            List<Quote> quotes = JsonConvert.DeserializeObject<List<Quote>>(TempData["Quotes"].ToString());
+            foreach (Quote quote in quotes)
+            {
+                //Database will give PK constraint violation error when trying to insert record with existing PK.
+                //So add company only if it doesnt exist, check existence using symbol (PK)
+                if (dbContext.Quotes.Where(c => c.symbol.Equals(quote.symbol)).Count() == 0)
+                {
+                    dbContext.Quotes.Add(quote);
+                }
+            }
+            dbContext.SaveChanges();
+            ViewBag.dbSuccessComp = 1;
+            return View("Quotes", quotes);
+        }
+
+        public IActionResult ShowTop5Stock()
+        {
+            IEXHandler webHandler = new IEXHandler();
+            List<Company> companies = webHandler.GetSymbols();
+
+            //TempData["Companies"] = JsonConvert.SerializeObject(companies);
+            List<CompanyStrategyValue> quotes = webHandler.GetTop5Picks(companies);
+            TempData["Quotes"] = JsonConvert.SerializeObject(quotes.Take(5));
+            return View(quotes);
         }
 
         /****
@@ -167,6 +213,8 @@ namespace MVCTemplate.Controllers
             double avgvol = equities.Average(e => e.volume) / 1000000; //Divide volume by million
             return new CompaniesEquities(companies, equities.Last(), dates, prices, volumes, avgprice, avgvol);
         }
+
+        
 
     }
 }

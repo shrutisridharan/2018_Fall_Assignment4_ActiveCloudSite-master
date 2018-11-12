@@ -1,0 +1,218 @@
+﻿@model IEnumerable<IEXTrading.Models.Quote>
+
+@{
+    ViewData["Title"] = "Quotes";
+}
+
+<h2>Showing first 5 symbol's quotes</h2>
+<a asp-controller="Home" asp-action="ShowTop5Stock">Top 5 52-Week Price Range Strategy Picks</a>
+
+<table>
+    <thead>
+        <tr>
+            <td>
+                companyName
+            </td>
+            <td>
+                primaryExchange
+            </td>
+            <td>
+                sector
+            </td>
+            <td>
+                calculationPrice
+            </td>
+            <td>
+                open
+            </td>
+            <td>
+                openTime
+            </td>
+            <td>
+                close
+            </td>
+            <td>
+                closeTime
+            </td>
+            <td>
+                high
+            </td>
+            <td>
+                low
+            </td>
+            <td>
+                latestPrice
+            </td>
+            <td>
+                latestSource
+            </td>
+            <td>
+                latestTime
+            </td>
+            <td>
+                latestUpdate
+            </td>
+            <td>
+                latestVolume
+            </td>
+
+            <td>
+                delayedPrice
+            </td>
+            <td>
+                delayedPriceTime
+            </td>
+            <td>
+                extendedPrice
+            </td>
+            <td>
+                extendedChange
+            </td>
+            <td>
+                extendedChangePercent
+            </td>
+            <td>
+                extendedPriceTime
+            </td>
+            <td>
+                previousClose
+            </td>
+            <td>
+                change
+            </td>
+            <td>
+                changePercent
+            </td>
+            <td>
+                avgTotalVolume
+            </td>
+
+            <td>
+                marketCap
+            </td>
+            <td>
+                peRatio
+            </td>
+            <td>
+                week52High
+            </td>
+            <td>
+                week52Low
+            </td>
+            <td>
+                ytdChange
+            </td>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.companyName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.primaryExchange)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.sector)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.calculationPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.open)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.openTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.close)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.closeTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.high)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.low)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.latestPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.latestSource)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.latestTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.latestUpdate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.latestVolume)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.delayedPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.delayedPriceTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.extendedPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.extendedChange)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.extendedChangePercent)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.extendedPriceTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.previousClose)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.change)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.changePercent)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.avgTotalVolume)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.marketCap)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.peRatio)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.week52High)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.week52Low)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ytdChange)
+                </td>
+
+            </tr>
+        }
+        <tr>
+            <td>
+                <a id="dbopt" asp-controller="Home" asp-action="PopulateQuotes"><img src="~/images/button_save-data.png" /></a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<script>
+    alertDbSave(@ViewBag.dbSuccessComp);
+</script>
